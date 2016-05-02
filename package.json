@@ -1,0 +1,14 @@
+{
+  "name": "pull-request-checklist",
+  "version": "1.0.0",
+  "description": "GitHub pull request checklist browser extension",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oughter/pull-request-checklist.git"
+  },
+  "license": "ISC",
+  "engines": {
+    "node": ">=4.0.0"
+  }
+}
