@@ -1,0 +1,21 @@
+#pr-extension-checklist {
+  margin: 20px 0;
+
+  h2 {
+    font-weight: normal;
+  }
+
+  ul {
+    list-style: none;
+    li {
+      padding: 4px;
+      label {
+        cursor: pointer;
+        font-weight: normal;
+        span {
+          margin-left: 4px;
+        }
+      }
+    }
+  }
+}

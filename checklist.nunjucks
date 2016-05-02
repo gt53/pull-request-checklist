@@ -1,7 +1,7 @@
 {% macro listItem(label) %}
 <li>
   <label>
-    <input type="checkbox" class="checklist-item" />{{label}}
+    <input type="checkbox" class="checklist-item" /><span>{{label}}</span>
   </label>
 </li>
 {% endmacro %}
