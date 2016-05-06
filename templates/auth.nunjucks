@@ -1,6 +1,13 @@
-<div id="{{ id }}">
+{# TODO: Help page #}
+<div id="{{ id }}" class="auth">
   <h2>Checklist</h2>
   <p>
-    <span>Personal access token required</span>
+    <span>Personal access token required <a href="#">[?]</a>.</span>
+    <a href="https://github.com/settings/tokens" target="_blank">Generate a token</a> and
+    paste its value below:
+  </p>
+  <p class="controls">
+    <input class="access-token" type="password" placeholder="Personal access token"/>
+    <button class="btn token-submit">Save to local storage</button>
   </p>
 </div>

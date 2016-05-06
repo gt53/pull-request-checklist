@@ -1,5 +1,17 @@
-#pr-extension-checklist {
+#pr-extension-header {
   margin: 20px 0;
+
+  &.auth {
+    input {
+      height: 34px;
+      width: 200px;
+      margin-right: 8px;
+      padding-left: 4px;
+    }
+    .controls {
+      margin-top: 8px;
+    }
+  }
 
   h2 {
     font-weight: normal;
