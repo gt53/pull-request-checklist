@@ -1,7 +1,16 @@
 module.exports = {
   checklistItems: [
-    'Include unit tests',
-    'Verify no security issues are being introduced',
-    'Add or update documentation',
-  ]
+    {
+      key: 'tests',
+      label: 'Add or update unit and integration tests for UI changes'
+    },
+    {
+      key: 'security',
+      label: 'Verify no security issues are being introduced'
+    },
+    {
+      key: 'documentation',
+      label: 'Add or update documentation'
+    },
+  ],
 };

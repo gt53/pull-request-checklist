@@ -1,12 +1,12 @@
-{% macro listItem(label) %}
+{% macro listItem(item) %}
 <li>
   <label>
-    <input type="checkbox" class="checklist-item" /><span>{{label}}</span>
+    <input type="checkbox" class="checklist-item" data-checklist-key="{{ item.key }}"/><span>{{ item.label }}</span>
   </label>
 </li>
 {% endmacro %}
 
-<div id="{{ id }}">
+<div id="{{ id }}" class="checklist">
   <h2>Checklist</h2>
   <ul>
   {% for item in items %}

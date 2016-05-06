@@ -24,6 +24,7 @@
     "webpack-stream": "^3.2.0"
   },
   "dependencies": {
-    "nunjucks": "^2.4.2"
+    "nunjucks": "^2.4.2",
+    "superagent": "^1.8.3"
   }
 }

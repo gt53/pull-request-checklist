@@ -4,6 +4,7 @@
 
 const config = require('./config');
 const auth = require('./auth');
+const xhr = require('./xhr');
 const checklistTemplate = require('../templates/checklist.nunjucks');
 const authTemplate = require('../templates/auth.nunjucks');
 
@@ -44,6 +45,8 @@ function injectHeaderContent() {
 
   if (!isAuthorized) {
     attachAuthEventHandlers();
+  } else {
+    loadChecklist();
   }
 }
 
@@ -67,6 +70,23 @@ function attachAuthEventHandlers() {
       init();
       // TODO: Add messaging for user setting a token but then auth failing
     }
+  });
+}
+
+function loadChecklist() {
+  // TODO: Get and parse existing comments to see if any of the 
+  // checklist items have been completed
+
+  attachChecklistEventHandlers();
+}
+
+function attachChecklistEventHandlers() {
+  let checklist = document.querySelector(`#${domIds.header}.checklist`);
+  checklist.addEventListener('click', (e) => {
+    let target = e.target;
+    let checklistKey = target.getAttribute('data-checklist-key');
+    if (!checklistKey) return;
+
   });
 }
 
