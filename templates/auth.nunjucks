@@ -1,0 +1,6 @@
+<div id="{{ id }}">
+  <h2>Checklist</h2>
+  <p>
+    <span>Personal access token required</span>
+  </p>
+</div>

@@ -1,5 +1,11 @@
+/**
+ * @module main
+ */
+
 const config = require('./config');
-const checklistTemplate = require('../checklist.nunjucks');
+const auth = require('./auth');
+const checklistTemplate = require('../templates/checklist.nunjucks');
+const authTemplate = require('../templates/auth.nunjucks');
 
 const domIds = {
   checklist: 'pr-extension-checklist',
@@ -11,18 +17,24 @@ const selectors = {
 let props = {};
 
 function init() {
-  injectChecklist();
+  injectHeaderContent();
 }
 
-function injectChecklist() {
+function injectHeaderContent() {
   let discussionHeader = document.querySelector(selectors.discussionHeader);
   if (!discussionHeader) return;
 
   let div = document.createElement('div');
-  let markup = checklistTemplate.render({
-    id: domIds.checklist,
-    items: config.checklistItems
-  });
+  let markup;
+
+  if (auth.isAuthorized()) {
+    markup = checklistTemplate.render({
+      id: domIds.checklist,
+      items: config.checklistItems
+    });
+  } else {
+    markup = authTemplate.render({ id: domIds.checklist, });
+  }
 
   div.innerHTML = markup;
 
