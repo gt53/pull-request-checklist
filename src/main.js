@@ -4,7 +4,7 @@
 
 const config = require('./config');
 const auth = require('./auth');
-const xhr = require('./xhr');
+const gitHubApi = require('./github-api');
 const checklistTemplate = require('../templates/checklist.nunjucks');
 const authTemplate = require('../templates/auth.nunjucks');
 
@@ -77,6 +77,8 @@ function loadChecklist() {
   // TODO: Get and parse existing comments to see if any of the 
   // checklist items have been completed
 
+  gitHubApi.getPullRequestData();
+
   attachChecklistEventHandlers();
 }
 
@@ -86,6 +88,12 @@ function attachChecklistEventHandlers() {
     let target = e.target;
     let checklistKey = target.getAttribute('data-checklist-key');
     if (!checklistKey) return;
+
+    if (!target.checked) {
+      gitHubApi.addComment(checklistKey);
+    } else {
+      gitHubApi.deleteComment();
+    }
 
   });
 }
