@@ -59,6 +59,8 @@ function attachAuthEventHandlers() {
       let authSection = document.querySelector(`#${domIds.header}.auth`);
       if (authSection && authSection.parentNode) {
         authSection.parentNode.removeChild(authSection);
+        authSection = null;
+        tokenSaveButton = null;
       }
 
       // Re-init to load checklist
