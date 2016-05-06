@@ -4,7 +4,7 @@
 
 const tokenKey = 'pr-checklist-extension-auth';
 
-function isAuthenticated() {
+function isAuthorized() {
   return getToken() !== undefined;
 }
 
@@ -21,7 +21,7 @@ function removeToken() {
 }
 
 module.exports = {
-  isAuthenticated: isAuthenticated,
+  isAuthorized: isAuthorized,
   getToken: getToken,
   setToken: setToken,
   removeToken: removeToken,

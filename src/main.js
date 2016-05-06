@@ -25,10 +25,10 @@ function injectHeaderContent() {
   if (!discussionHeader) return;
 
   let markup;
-  let isAuthenticated = auth.isAuthenticated();
+  let isAuthorized = auth.isAuthorized();
   let div = document.createElement('div');
 
-  if (isAuthenticated) {
+  if (isAuthorized) {
     markup = checklistTemplate.render({
       id: domIds.header,
       items: config.checklistItems
@@ -42,7 +42,7 @@ function injectHeaderContent() {
   let headerParent = discussionHeader.parentNode;
   headerParent.insertBefore(div, discussionHeader.nextSibling);
 
-  if (!isAuthenticated) {
+  if (!isAuthorized) {
     attachAuthEventHandlers();
   }
 }
@@ -54,6 +54,16 @@ function attachAuthEventHandlers() {
     let tokenValue = tokenInput && tokenInput.value;
     if (tokenValue) {
       auth.setToken(tokenValue);
+
+      // Remove the auth section
+      let authSection = document.querySelector(`#${domIds.header}.auth`);
+      if (authSection && authSection.parentNode) {
+        authSection.parentNode.removeChild(authSection);
+      }
+
+      // Re-init to load checklist
+      init();
+      // TODO: Add messaging for user setting a token but then auth failing
     }
   });
 }
