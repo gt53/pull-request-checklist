@@ -9,7 +9,7 @@ const auth = require('./auth');
 const config = require('./config');
 const apiUrlStart = 'https://api.github.com';
 
-const commentPreface = '[PR Checklist auto-comment]';
+const commentPreface = '[Checklist auto-comment]';
 
 function getPullRequestData() {
   return new Promise((resolve, reject) => {
@@ -39,7 +39,7 @@ function addComment(checklistKey) {
   let checklistItem = getChecklistItem(checklistKey);
   if (!checklistItem) return;
 
-  let comment = `${commentPreface} \`${checklistItem.label}\` -- good to go`;
+  let comment = `${commentPreface} \`${checklistItem.label}\`: :+1:`;
   request
     .post(getCommentsUrl())
     .send({ body: comment || '' })
