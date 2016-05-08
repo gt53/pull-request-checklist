@@ -15,8 +15,6 @@ const selectors = {
   gitHubDiscussionHeader: '#partial-discussion-header',
 };
 
-let props = {};
-
 function init() {
   injectHeaderContent();
 }

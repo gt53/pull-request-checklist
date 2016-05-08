@@ -4,7 +4,6 @@
  */
 
 const request = require('superagent');
-//const request = require('superagent-bluebird-promise'); // TODO: Remove as dependency if end up not using
 const auth = require('./auth');
 const config = require('./config');
 const apiUrlStart = 'https://api.github.com';
@@ -49,6 +48,8 @@ function addComment(checklistKey) {
     });
 }
 
+// TODO: Indicate delete success in UI since conversation section
+// does not auto-update upon deletion like it does when a comment is added
 function deleteComment(checklistKey) {
   let url = getCommentsUrl();
   getComments()
