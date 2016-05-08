@@ -113,4 +113,5 @@ module.exports = {
   getComments: getComments,
   addComment: addComment,
   deleteComment: deleteComment,
+  getCommentId: getCommentId,
 };

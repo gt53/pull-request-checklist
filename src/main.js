@@ -74,10 +74,22 @@ function attachAuthEventHandlers() {
 }
 
 function loadChecklist() {
-  // TODO: Get and parse existing comments to see if any of the 
-  // checklist items have been completed
-
-  //gitHubApi.addComment('Test adding a comment');
+  // Mark checked any checkbox items that have already been checked
+  gitHubApi.getComments()
+    .then((result) => {
+      let comments = result.body;
+      config.checklistItems.forEach((item) => {
+        if (gitHubApi.getCommentId(item.key, comments)) {
+          let check = document.querySelector(`#${domIds.header} input[data-checklist-key="${item.key}"]`);
+          if (check) {
+            check.checked = true;
+          }
+        }
+      });
+    })
+    .catch((reason) => {
+      console.dir(reason);
+    });
 
   attachChecklistEventHandlers();
 }
