@@ -77,7 +77,7 @@ function loadChecklist() {
   // TODO: Get and parse existing comments to see if any of the 
   // checklist items have been completed
 
-  gitHubApi.getPullRequestData();
+  //gitHubApi.addComment('Test adding a comment');
 
   attachChecklistEventHandlers();
 }
@@ -89,10 +89,10 @@ function attachChecklistEventHandlers() {
     let checklistKey = target.getAttribute('data-checklist-key');
     if (!checklistKey) return;
 
-    if (!target.checked) {
+    if (target.checked) {
       gitHubApi.addComment(checklistKey);
     } else {
-      gitHubApi.deleteComment();
+      gitHubApi.deleteComment(checklistKey);
     }
 
   });
