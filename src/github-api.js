@@ -24,11 +24,15 @@ function getPullRequestData() {
 }
 
 function getComments() {
-  request
-    .get(getCommentUrl())
-    .set('Authorization', getAuthHeader())
-    .end((error, result) => {
-    });
+  return new Promise((resolve, reject) => {
+    request
+      .get(getCommentsUrl())
+      .set('Authorization', getAuthHeader())
+      .end((error, result) => {
+        if (error) return reject(error);
+        return resolve(result);
+      });
+  });
 }
 
 function addComment(checklistKey) {
@@ -37,25 +41,36 @@ function addComment(checklistKey) {
 
   let comment = `${commentPreface} \`${checklistItem.label}\` -- good to go`;
   request
-    .post(getCommentUrl())
+    .post(getCommentsUrl())
     .send({ body: comment || '' })
     .set('Authorization', getAuthHeader())
     .end((err, res) => {
-      console.dir(err);
       console.dir(res);
     });
 }
 
 function deleteComment(checklistKey) {
-  let url = getCommentUrl();
-  // TODO: Append '/:id'
-  /*
-  request
-    .del(url)
-    .set('Authorization', getAuthHeader())
-    .end((error, result) => {
+  let url = getCommentsUrl();
+  getComments()
+    .then((result) => {
+      let commentId = getCommentId(checklistKey, result.body);
+      if (!commentId) return;
+
+      // Strip issue number from URL
+      url = url.replace(/(\/issues)\/\d+\/(comments\/?)/, '$1/$2');
+
+      url += `/${commentId}`;
+      request
+        .del(url)
+        .set('Authorization', getAuthHeader())
+        .end((error, result) => {
+          console.dir(error);
+          console.dir(result);
+        });
+    })
+    .catch((reason) => {
+      console.dir(reason);
     });
-    */
 }
 
 function getChecklistItem(key) {
@@ -63,6 +78,19 @@ function getChecklistItem(key) {
   for (let i = 0; i < items.length; i++) {
     if (items[i].key === key) {
       return items[i];
+    }
+  }
+  return undefined;
+}
+
+function getCommentId(checklistKey, comments) {
+  let checklistItem = getChecklistItem(checklistKey);
+  for (let i = 0; i < comments.length; i++) {
+    let comment = comments[i];
+    let preface = commentPreface.replace(/\[/, '\\[').replace(/\]/, '\\]');
+    let prefacePattern = new RegExp(`^${preface}`);
+    if (prefacePattern.test(comment.body) && comment.body.indexOf(checklistItem.label) !== -1) {
+      return comment.id;
     }
   }
   return undefined;
@@ -76,7 +104,7 @@ function getPullRequestUrl() {
   return `${apiUrlStart}/repos${window.location.pathname}`.replace(/\/pull\//, '/pulls/');
 }
 
-function getCommentUrl() {
+function getCommentsUrl() {
   return `${apiUrlStart}/repos${window.location.pathname}/comments`.replace(/\/pull\//, '/issues/');
 }
 
