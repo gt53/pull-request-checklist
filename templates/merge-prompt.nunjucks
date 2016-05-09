@@ -13,8 +13,8 @@
   <div class="merge-confirm">
     <span>Are you sure you want to merge this PR now?</span>
     <div>
-      <button class="btn">No</button>
-      <button class="btn btn-primary">Yes</button>
+      <button class="btn cancel-merge">No</button>
+      <button class="btn btn-primary perform-merge">Yes</button>
     </div>
   </div>
 </div>

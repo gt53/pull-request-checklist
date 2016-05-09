@@ -29,7 +29,7 @@ function injectHeaderContent() {
 
   let markup;
   let isAuthorized = auth.isAuthorized();
-  let div = document.createElement('div');
+  let authSection = document.createElement('div');
 
   if (isAuthorized) {
     markup = checklistTemplate.render({
@@ -40,10 +40,10 @@ function injectHeaderContent() {
     markup = authTemplate.render({ id: domIds.header });
   }
 
-  div.innerHTML = markup;
+  authSection.innerHTML = markup;
 
   let headerParent = discussionHeader.parentNode;
-  headerParent.insertBefore(div, discussionHeader.nextSibling);
+  headerParent.insertBefore(authSection, discussionHeader.nextSibling);
 
   if (!isAuthorized) {
     attachAuthEventHandlers();
@@ -64,8 +64,6 @@ function attachAuthEventHandlers() {
       let authSection = document.querySelector(`#${domIds.header}.auth`);
       if (authSection && authSection.parentNode) {
         authSection.parentNode.removeChild(authSection);
-        authSection = null;
-        tokenSaveButton = null;
       }
 
       // Re-init to load checklist
@@ -89,9 +87,7 @@ function loadChecklist() {
         }
       });
     })
-    .then(() => {
-      promptMerge();
-    })
+    .then(() => hookMerge())
     .catch((reason) => {
       console.dir(reason);
     });
@@ -115,25 +111,38 @@ function attachChecklistEventHandlers() {
   });
 }
 
-function promptMerge() {
+function hookMerge() {
   let mergeContainer = document.querySelector(selectors.mergeContainer);
   let mergeButton = mergeContainer && mergeContainer.querySelector(selectors.mergeButton);
   if (!mergeButton) return;
 
   mergeButton.addEventListener('click', (e) => {
+    // Inspect checkbox items state that get set in loadChecklist()
     let uncheckedItems = getUncheckedItems();
     if (!uncheckedItems.length) return;
 
     e.preventDefault();
     e.stopPropagation();
 
+    // Add merge prompt to DOM
     let markup = mergeTemplate.render({
       items: uncheckedItems
     });
-    let div = document.createElement('div');
-    div.id = domIds.mergePrompt;
-    div.innerHTML = markup;
-    document.body.appendChild(div);
+    let promptDiv = document.createElement('div');
+    promptDiv.id = domIds.mergePrompt;
+    promptDiv.innerHTML = markup;
+    document.body.appendChild(promptDiv);
+
+    // Add cancel / proceed event handlers
+    promptDiv.addEventListener('click', (e) => {
+      let targetClasses = e.target.classList;
+      if (targetClasses.contains('perform-merge')) {
+        console.log('do merge');
+        promptDiv.parentNode.removeChild(promptDiv);
+      } else if (targetClasses.contains('cancel-merge')) {
+        promptDiv.parentNode.removeChild(promptDiv);
+      }
+    });
   });
 }
 
