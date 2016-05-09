@@ -7,12 +7,16 @@ const auth = require('./auth');
 const gitHubApi = require('./github-api');
 const checklistTemplate = require('../templates/checklist.nunjucks');
 const authTemplate = require('../templates/auth.nunjucks');
+const mergeTemplate = require('../templates/merge-prompt.nunjucks');
 
 const domIds = {
-  header: 'pr-extension-header',
+  header: 'pr-checklist-extension-header',
+  mergePrompt: 'pr-checklist-extension-merge-prompt',
 };
 const selectors = {
   gitHubDiscussionHeader: '#partial-discussion-header',
+  mergeContainer: '.merge-pr',
+  mergeButton: 'button.btn-primary',
 };
 
 function init() {
@@ -85,6 +89,9 @@ function loadChecklist() {
         }
       });
     })
+    .then(() => {
+      promptMerge();
+    })
     .catch((reason) => {
       console.dir(reason);
     });
@@ -105,6 +112,35 @@ function attachChecklistEventHandlers() {
       gitHubApi.deleteComment(checklistKey);
     }
 
+  });
+}
+
+function promptMerge() {
+  let mergeContainer = document.querySelector(selectors.mergeContainer);
+  let mergeButton = mergeContainer && mergeContainer.querySelector(selectors.mergeButton);
+  if (!mergeButton) return;
+
+  mergeButton.addEventListener('click', (e) => {
+    let uncheckedItems = getUncheckedItems();
+    if (!uncheckedItems.length) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    let markup = mergeTemplate.render({
+      items: uncheckedItems
+    });
+    let div = document.createElement('div');
+    div.id = domIds.mergePrompt;
+    div.innerHTML = markup;
+    document.body.appendChild(div);
+  });
+}
+
+function getUncheckedItems() {
+  return config.checklistItems.filter((item) => {
+    let check = document.querySelector(`#${domIds.header} input[data-checklist-key="${item.key}"]`);
+    return check === undefined || check.checked === false;
   });
 }
 

@@ -1,0 +1,20 @@
+<div class="prompt-container">
+  <h2>PR Checklist</h2>
+  <div class="merge-unchecked-list">
+    <span class="merge-warning">Warning: The following checklist items have not been checked:</span>
+    <ul>
+    {% for item in items %}
+      <li>
+        <span>{{ item.label }}</span>
+      </li>
+    {% endfor %}
+    </ul>
+  </div>
+  <div class="merge-confirm">
+    <span>Are you sure you want to merge this PR now?</span>
+    <div>
+      <button class="btn">No</button>
+      <button class="btn btn-primary">Yes</button>
+    </div>
+  </div>
+</div>
