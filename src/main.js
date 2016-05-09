@@ -17,6 +17,7 @@ const selectors = {
   gitHubDiscussionHeader: '#partial-discussion-header',
   mergeContainer: '.merge-pr',
   mergeButton: 'button.btn-primary',
+  cancelMergeButton: '.commit-form-actions button.js-details-target',
 };
 
 function init() {
@@ -87,7 +88,7 @@ function loadChecklist() {
         }
       });
     })
-    .then(() => hookMerge())
+    .then(hookMerge)
     .catch((reason) => {
       console.dir(reason);
     });
@@ -116,13 +117,15 @@ function hookMerge() {
   let mergeButton = mergeContainer && mergeContainer.querySelector(selectors.mergeButton);
   if (!mergeButton) return;
 
-  mergeButton.addEventListener('click', (e) => {
+  mergeButton.addEventListener('click', mergeButtonHandler);
+
+  function mergeButtonHandler(mergeButtonEvent) {
     // Inspect checkbox items state that get set in loadChecklist()
     let uncheckedItems = getUncheckedItems();
     if (!uncheckedItems.length) return;
 
-    e.preventDefault();
-    e.stopPropagation();
+    mergeButtonEvent.preventDefault();
+    mergeButtonEvent.stopPropagation();
 
     // Add merge prompt to DOM
     let markup = mergeTemplate.render({
@@ -137,13 +140,22 @@ function hookMerge() {
     promptDiv.addEventListener('click', (e) => {
       let targetClasses = e.target.classList;
       if (targetClasses.contains('perform-merge')) {
-        console.log('do merge');
         promptDiv.parentNode.removeChild(promptDiv);
+
+        // Allow merge to proceed and activate merge button
+        mergeButton.removeEventListener('click', mergeButtonHandler);
+        mergeButtonEvent.target.click();
+
+        // Hook the merge button again if the merge is cancelled
+        let cancelMergeButton = mergeContainer.querySelector(selectors.cancelMergeButton);
+        if (cancelMergeButton) {
+          hookMerge();
+        }
       } else if (targetClasses.contains('cancel-merge')) {
         promptDiv.parentNode.removeChild(promptDiv);
       }
     });
-  });
+  }
 }
 
 function getUncheckedItems() {
