@@ -6,21 +6,9 @@
 const request = require('superagent');
 const auth = require('./auth');
 const config = require('./config');
+
 const apiUrlStart = 'https://api.github.com';
-
 const commentPreface = '[Checklist auto-comment]';
-
-function getPullRequestData() {
-  return new Promise((resolve, reject) => {
-    request
-      .get(getPullRequestUrl())
-      .set('Authorization', getAuthHeader())
-      .end((error, result) => {
-        if (error) return reject(error);
-        return resolve(result);
-      });
-  });
-}
 
 function getComments() {
   return new Promise((resolve, reject) => {
@@ -35,43 +23,44 @@ function getComments() {
 }
 
 function addComment(checklistKey) {
-  let checklistItem = getChecklistItem(checklistKey);
-  if (!checklistItem) return;
+  return new Promise((resolve, reject) => {
+    let checklistItem = getChecklistItem(checklistKey);
+    if (!checklistItem) return reject('Item not found');
 
-  let comment = `${commentPreface} \`${checklistItem.label}\`: :+1:`;
-  request
-    .post(getCommentsUrl())
-    .send({ body: comment || '' })
-    .set('Authorization', getAuthHeader())
-    .end((err, res) => {
-      console.dir(res);
-    });
+    let comment = `${commentPreface} \`${checklistItem.label}\`: :+1:`;
+    request
+      .post(getCommentsUrl())
+      .send({ body: comment || '' })
+      .set('Authorization', getAuthHeader())
+      .end((err, res) => {
+        if (err) return reject(err);
+        return resolve(checklistKey);
+      });
+  });
 }
 
-// TODO: Indicate delete success in UI since conversation section
-// does not auto-update upon deletion like it does when a comment is added
 function deleteComment(checklistKey) {
-  let url = getCommentsUrl();
-  getComments()
-    .then((result) => {
-      let commentId = getCommentId(checklistKey, result.body);
-      if (!commentId) return;
+  return new Promise((resolve, reject) => {
+    let url = getCommentsUrl();
+    getComments()
+      .then((result) => {
+        let commentId = getCommentId(checklistKey, result.body);
+        if (!commentId) return reject('Item not found');
 
-      // Strip issue number from URL
-      url = url.replace(/(\/issues)\/\d+\/(comments\/?)/, '$1/$2');
+        // Strip issue number from URL
+        url = url.replace(/(\/issues)\/\d+\/(comments\/?)/, '$1/$2');
 
-      url += `/${commentId}`;
-      request
-        .del(url)
-        .set('Authorization', getAuthHeader())
-        .end((error, result) => {
-          console.dir(error);
-          console.dir(result);
-        });
-    })
-    .catch((reason) => {
-      console.dir(reason);
-    });
+        url += `/${commentId}`;
+        request
+          .del(url)
+          .set('Authorization', getAuthHeader())
+          .end((error, result) => {
+            if (error) return reject(error);
+            return resolve(checklistKey);
+          });
+      })
+      .catch((reason) => reject(reason));
+  });
 }
 
 function getChecklistItem(key) {
@@ -110,7 +99,6 @@ function getCommentsUrl() {
 }
 
 module.exports = {
-  getPullRequestData: getPullRequestData,
   getComments: getComments,
   addComment: addComment,
   deleteComment: deleteComment,
