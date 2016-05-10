@@ -2,10 +2,10 @@
   <h2>Checklist</h2>
   <div>
     <span class="access-token-needed">Personal access token required.</span>
+    <span>A personal access token is needed to make GitHub API calls.</span><br/>
     <p>
-      <span>A personal access token is needed to make GitHub API calls.</span><br/>
-      <a href="https://github.com/settings/tokens" target="_blank">Generate a token</a> (only repo scope is needed) and
-    paste its value below:
+      <span>Complete this one-time setup step by <a href="https://github.com/settings/tokens" target="_blank">generating a token</a> (only repo scope is needed) and
+    saving its value below:
     </p>
   </div>
   <div class="controls">
