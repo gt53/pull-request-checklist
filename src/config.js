@@ -3,7 +3,7 @@ module.exports = {
   checklistItems: [
     {
       key: 'tests',
-      label: 'Add or update unit and integration tests for UI changes'
+      label: 'Add or update unit and integration tests'
     },
     {
       key: 'security',
