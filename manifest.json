@@ -1,10 +1,10 @@
 {
   "manifest_version": 2,
-  "name": "GitHub PR checklist",
+  "name": "GitHub PR Checklist",
   "version": "1.0",
-  "description": "GitHub pull request checklist browser extension",
+  "description": "GitHub pull request checklist",
   "page_action": {
-    "default_title": "GitHub PR checklist"
+    "default_title": "GitHub PR Checklist"
   },
   "content_scripts": [
     {
@@ -13,5 +13,9 @@
       "css": ["main.css"],
       "run_at": "document_end"
     }
-  ]
+  ],
+  "icons": {
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
 }

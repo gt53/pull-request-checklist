@@ -5,6 +5,11 @@ const webpack = require('webpack-stream');
 
 const buildDir = 'build';
 
+gulp.task('icons', () => {
+  gulp.src('./icons/**/*.png')
+    .pipe(gulp.dest(`./${buildDir}/icons`));
+});
+
 gulp.task('sass', () => {
   gulp.src('./styles/**/*.scss')
     .pipe(sass().on('error', sass.logError))
@@ -25,4 +30,4 @@ gulp.task('src', () => {
     .pipe(gulp.dest(buildDir));
 });
 
-gulp.task('default', ['sass', 'src']);
+gulp.task('default', ['icons', 'sass', 'src']);
