@@ -6,8 +6,8 @@ const webpack = require('webpack-stream');
 const buildDir = 'build';
 
 gulp.task('icons', () => {
-  gulp.src('./icons/**/*.png')
-    .pipe(gulp.dest(`./${buildDir}/icons`));
+  gulp.src('./images/icons/**/*.png')
+    .pipe(gulp.dest(`./${buildDir}`));
 });
 
 gulp.task('sass', () => {
