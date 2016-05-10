@@ -10,8 +10,7 @@ The extension tracks the checking off of those items via PR comments and prompts
 ## Screenshots
 
 ### Checklist on PR page
-![checklist](images/screenshots/checklist.png "hello")
-
+![checklist](images/screenshots/checklist.png)
 
 ### Comment automatically added after checking an item
 ![comment](images/screenshots/comment.png)
