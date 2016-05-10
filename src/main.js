@@ -104,22 +104,11 @@ function attachChecklistEventHandlers() {
     if (!checklistKey) return;
 
     if (target.checked) {
-      gitHubApi.addComment(checklistKey)
-        .then(() => updateChecklistItemStatus(checklistKey));
+      gitHubApi.addComment(checklistKey);
     } else {
-      gitHubApi.deleteComment(checklistKey)
-        .then(() => updateChecklistItemStatus(checklistKey));
+      gitHubApi.deleteComment(checklistKey);
     }
   });
-}
-
-function updateChecklistItemStatus(itemKey) {
-  let check = document.querySelector(`#${domIds.header} input[data-checklist-key="${itemKey}"]`);
-  let status = check && check.parentNode.parentNode.querySelector('.auto-comment-status');
-  if (!status) return;
-
-  let deleteMessage = 'Comment deleted (it may still appear until a refresh)';
-  status.innerHTML = check.checked ? 'Comment added' : deleteMessage;
 }
 
 function hookMerge() {

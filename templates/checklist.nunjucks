@@ -3,7 +3,6 @@
   <label>
     <input type="checkbox" class="checklist-item" data-checklist-key="{{ item.key }}"/><span>{{ item.label }}</span>
   </label>
-  <span class="auto-comment-status"></span>
 </li>
 {% endmacro %}
 

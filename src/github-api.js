@@ -23,44 +23,37 @@ function getComments() {
 }
 
 function addComment(checklistKey) {
-  return new Promise((resolve, reject) => {
-    let checklistItem = getChecklistItem(checklistKey);
-    if (!checklistItem) return reject('Item not found');
+  let checklistItem = getChecklistItem(checklistKey);
+  if (!checklistItem) return;
 
-    let comment = `${commentPreface} \`${checklistItem.label}\`: :+1:`;
-    request
-      .post(getCommentsUrl())
-      .send({ body: comment || '' })
-      .set('Authorization', getAuthHeader())
-      .end((err, res) => {
-        if (err) return reject(err);
-        return resolve(checklistKey);
-      });
-  });
+  let comment = `${commentPreface} \`${checklistItem.label}\`: :+1:`;
+  request
+    .post(getCommentsUrl())
+    .send({ body: comment || '' })
+    .set('Authorization', getAuthHeader())
+    .end((err, res) => {});
 }
 
+// TODO: After a comment is deleted, it still appears on the page
+// until the page is reloaded. Figure out a way to trigger an async
+// update like when a comment is added or message the user to avoid confusion
 function deleteComment(checklistKey) {
-  return new Promise((resolve, reject) => {
-    let url = getCommentsUrl();
-    getComments()
-      .then((result) => {
-        let commentId = getCommentId(checklistKey, result.body);
-        if (!commentId) return reject('Item not found');
+  let url = getCommentsUrl();
+  getComments()
+    .then((result) => {
+      let commentId = getCommentId(checklistKey, result.body);
+      if (!commentId) return;
 
-        // Strip issue number from URL
-        url = url.replace(/(\/issues)\/\d+\/(comments\/?)/, '$1/$2');
+      // Strip issue number from URL
+      url = url.replace(/(\/issues)\/\d+\/(comments\/?)/, '$1/$2');
 
-        url += `/${commentId}`;
-        request
-          .del(url)
-          .set('Authorization', getAuthHeader())
-          .end((error, result) => {
-            if (error) return reject(error);
-            return resolve(checklistKey);
-          });
-      })
-      .catch((reason) => reject(reason));
-  });
+      url += `/${commentId}`;
+      request
+        .del(url)
+        .set('Authorization', getAuthHeader())
+        .end((error, result) => {});
+    })
+    .catch((reason) => {});
 }
 
 function getChecklistItem(key) {
