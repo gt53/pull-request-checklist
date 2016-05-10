@@ -1,13 +1,15 @@
-{# TODO: Help page #}
 <div id="{{ id }}" class="auth">
   <h2>Checklist</h2>
-  <p>
-    <span>Personal access token required <a href="#">[?]</a>.</span>
-    <a href="https://github.com/settings/tokens" target="_blank">Generate a token</a> and
+  <div>
+    <span class="access-token-needed">Personal access token required.</span>
+    <p>
+      <span>A personal access token is needed to make GitHub API calls.</span><br/>
+      <a href="https://github.com/settings/tokens" target="_blank">Generate a token</a> (only repo scope is needed) and
     paste its value below:
-  </p>
-  <p class="controls">
+    </p>
+  </div>
+  <div class="controls">
     <input class="access-token" type="password" placeholder="Personal access token"/>
     <button class="btn token-submit">Save to local storage</button>
-  </p>
+  </div>
 </div>
