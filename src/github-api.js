@@ -83,12 +83,12 @@ function getAuthHeader() {
   return `token ${auth.getToken()}`;
 }
 
-function getPullRequestUrl() {
-  return `${apiUrlStart}/repos${window.location.pathname}`.replace(/\/pull\//, '/pulls/');
-}
-
 function getCommentsUrl() {
-  return `${apiUrlStart}/repos${window.location.pathname}/comments`.replace(/\/pull\//, '/issues/');
+  let url = `${apiUrlStart}/repos${window.location.pathname}`;
+  url = url.replace(/(\/pull\/\d+).*/, '$1');
+  url = url.replace(/\/pull\//, '/issues/');
+  url += '/comments';
+  return url;
 }
 
 module.exports = {
