@@ -1,6 +1,6 @@
 {
   "name": "pull-request-checklist",
-  "version": "1.1.1",
+  "version": "1.1.0",
   "description": "GitHub pull request checklist browser extension",
   "scripts": {
     "build": "gulp"
