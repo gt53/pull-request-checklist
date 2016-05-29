@@ -34,9 +34,6 @@ function addComment(checklistKey) {
     .end((err, res) => {});
 }
 
-// TODO: After a comment is deleted, it still appears on the page
-// until the page is reloaded. Figure out a way to trigger an async
-// update like when a comment is added or message the user to avoid confusion
 function deleteComment(checklistKey) {
   let url = getCommentsUrl();
   getComments()

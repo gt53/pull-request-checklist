@@ -20,6 +20,8 @@ const selectors = {
   mergeContainer: '.merge-pr',
   mergeButton: 'button.btn-primary',
   cancelMergeButton: '.commit-form-actions button.js-details-target',
+  commentNode: '#issuecomment',
+  deleteCommentButton: 'form.js-comment-delete button',
 };
 
 function init() {
@@ -112,9 +114,37 @@ function attachChecklistEventHandlers() {
     if (target.checked) {
       gitHubApi.addComment(checklistKey);
     } else {
-      gitHubApi.deleteComment(checklistKey);
+      deleteComment(checklistKey);
     }
   });
+}
+
+/**
+ * Removes a comment by simulating a click on the remove comment
+ * button instead of making a GitHub API call, because after an
+ * API call the comment remains on the page until a reload.
+ */
+function deleteComment(checklistKey) {
+  gitHubApi.getComments()
+    .then((results) => {
+      let commentId = gitHubApi.getCommentId(checklistKey, results.body);
+      if (!commentId) return;
+
+      let commentNode = document.querySelector(`${selectors.commentNode}-${commentId}`);
+      let deleteButton = commentNode && commentNode.querySelector(selectors.deleteCommentButton);
+      if (!deleteButton) {
+        return deleteViaApi();
+      }
+
+      // Prevent a confirmation prompt
+      deleteButton.removeAttribute('data-confirm');
+
+      deleteButton.click();
+    })
+
+  function deleteViaApi() {
+    gitHubApi.deleteComment(checklistKey);
+  }
 }
 
 function hookMerge() {
