@@ -53,7 +53,7 @@ function getRepoSpecifcConfig() {
   let currentRepo = window.location.pathname.replace(/^\/.+\/(.+)\/pull\/\d+/, '$1');
   if (repoSpecificItems.length) {
     let repoConfig = repoSpecificItems.find((repoSpecificItem) => repoSpecificItem.repo === currentRepo);
-    if (repoConfig.items && repoConfig.items.length) {
+    if (repoConfig && repoConfig.items && repoConfig.items.length) {
       return repoConfig;
     }
   }
